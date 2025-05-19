@@ -1,0 +1,82 @@
+﻿@page "/usuarios"
+@rendermode InteractiveServer
+@inject NavigationManager _navigationManager
+@inject IRepositorioUsuarios _repositorioUsuarios
+
+<PageTitle>Usuarios</PageTitle>
+
+<h3>Usuarios del Gimnasio</h3>
+<a class="btn btn-primary" href="/usuarios/nuevo">Nuevo Usuario</a>
+
+@if (_usuarios == null)
+{
+    <p><em>Cargando...</em></p>
+}
+else if (_usuarios.Count > 0)
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Correo</th>
+                <th>Contraseña</th>
+                <th>Fecha Registro</th>
+                <th>Membresía</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var usuario in _usuarios)
+            {
+                <tr>
+                    <td>@usuario.Nombre</td>
+                    <td>@usuario.Correo</td>
+                    <td>@usuario.Contrasena</td>
+                    <td>@usuario.FechaRegistro.ToShortDateString()</td>
+                    <td>@usuario.TipoMembresia</td>
+                    <td>@usuario.Estado</td>
+                    <td>
+                        <button class="btn btn-outline-primary" @onclick="@(() => Editar(usuario))">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
+                                <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168z" />
+                                <path d="M11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207z" />
+                                <path d="M4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293L11.207 5.5 10.5 4.793z" />
+                            </svg>
+                        </button>
+                        <button class="btn btn-outline-danger" @onclick="@(() => Eliminar(usuario))">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
+                                <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1z" />
+                                <path d="M4.042 3.5h7.916l-.846 10.58a1 1 0 0 1-.997.92H5.885a1 1 0 0 1-.997-.92zM6.5 5a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L6.5 5zm3 0a.5.5 0 0 1 .528.47l-.5 8.5a.5.5 0 0 1-.998-.06l.5-8.5z" />
+                            </svg>
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No hay usuarios registrados.</p>
+}
+
+@code {
+    private List<Usuario>? _usuarios;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _usuarios = await _repositorioUsuarios.GetAll();
+    }
+
+    private void Editar(Usuario usuario)
+    {
+        _navigationManager.NavigateTo($"/usuarios/editar/{usuario.Id}");
+    }
+
+    private async Task Eliminar(Usuario usuario)
+    {
+        await _repositorioUsuarios.Delete(usuario.Id);
+        _usuarios = await _repositorioUsuarios.GetAll();
+    }
+}
