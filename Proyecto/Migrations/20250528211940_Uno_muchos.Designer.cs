@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Proyecto.Data;
 
@@ -11,9 +12,11 @@ using Proyecto.Data;
 namespace Proyecto.Migrations
 {
     [DbContext(typeof(BDDirectorioDBContext))]
-    partial class BDDirectorioDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250528211940_Uno_muchos")]
+    partial class Uno_muchos
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,38 +24,6 @@ namespace Proyecto.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("EstiloVida", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Nombre")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("EstilosVida");
-                });
-
-            modelBuilder.Entity("EstiloVidaUsuario", b =>
-                {
-                    b.Property<int>("EstilosVidaId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UsuariosId")
-                        .HasColumnType("int");
-
-                    b.HasKey("EstilosVidaId", "UsuariosId");
-
-                    b.HasIndex("UsuariosId");
-
-                    b.ToTable("EstiloVidaUsuario");
-                });
 
             modelBuilder.Entity("Proyecto.Data.Clase", b =>
                 {
@@ -63,7 +34,6 @@ namespace Proyecto.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Nombre")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -79,7 +49,7 @@ namespace Proyecto.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("ClaseId")
+                    b.Property<int>("ClaseId")
                         .HasColumnType("int");
 
                     b.Property<string>("Contrasena")
@@ -112,26 +82,13 @@ namespace Proyecto.Migrations
                     b.ToTable("Usuarios");
                 });
 
-            modelBuilder.Entity("EstiloVidaUsuario", b =>
-                {
-                    b.HasOne("EstiloVida", null)
-                        .WithMany()
-                        .HasForeignKey("EstilosVidaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Usuario", null)
-                        .WithMany()
-                        .HasForeignKey("UsuariosId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Usuario", b =>
                 {
                     b.HasOne("Proyecto.Data.Clase", "Clase")
                         .WithMany("Usuarios")
-                        .HasForeignKey("ClaseId");
+                        .HasForeignKey("ClaseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Clase");
                 });

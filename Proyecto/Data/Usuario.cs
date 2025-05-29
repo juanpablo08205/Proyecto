@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Proyecto.Data;
 
 public class Usuario
 {
@@ -24,4 +25,12 @@ public class Usuario
 
     [Required(ErrorMessage = "El estado es obligatorio.")]
     public string Estado { get; set; } = string.Empty; 
+
+    //propiedades de navegacion 
+    public int? ClaseId { get; set; }
+    virtual public Clase? Clase { get; set; }
+    public List<EstiloVida> EstilosVida { get; set; } = new();
+
+
+
 }

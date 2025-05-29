@@ -12,5 +12,16 @@ namespace Proyecto.Data
         }
 
         public DbSet<Usuario> Usuarios { get; set; }
+        public DbSet<Clase> Clases { get; set; }
+        public DbSet<EstiloVida> EstilosVida { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Usuario>()
+                .HasMany(u => u.EstilosVida)
+                .WithMany(e => e.Usuarios);
+        }
     }
 }

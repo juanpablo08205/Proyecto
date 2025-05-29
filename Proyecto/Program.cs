@@ -14,6 +14,9 @@ builder.Services.AddDbContext<BDDirectorioDBContext>(
     builder.Configuration.GetConnectionString("DefaultConnection")
                         ));
 builder.Services.AddScoped<IRepositorioUsuarios, RepositorioUsuarios>();
+builder.Services.AddScoped<IRepositorioClases, RepositorioClases>();
+builder.Services.AddScoped<IRepositorioEstilosVida, RepositorioEstilosVida>();
+
 
 var app = builder.Build();
 

@@ -1,0 +1,66 @@
+﻿@page "/estilosvida"
+@inject IRepositorioEstilosVida _repositorio
+@inject NavigationManager _nav
+
+<h3>Estilos de Vida</h3>
+
+<a href="/estilosvida/nuevo" class="btn btn-success mb-3">Nuevo Estilo</a>
+
+@if (_estilos == null)
+{
+    <p>Cargando...</p>
+}
+else if (_estilos.Count == 0)
+{
+    <p>No hay estilos registrados.</p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nombre</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var estilo in _estilos)
+            {
+                <tr>
+                    <td>@estilo.Id</td>
+                    <td>@estilo.Nombre</td>
+                    <td>
+                        <button class="btn btn-primary btn-sm" @onclick="() => Editar(estilo.Id)">Editar</button>
+                        <button class="btn btn-danger btn-sm" @onclick="() => Eliminar(estilo.Id)">Eliminar</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<EstiloVida> _estilos;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CargarEstilos();
+    }
+
+    private async Task CargarEstilos()
+    {
+        _estilos = await _repositorio.GetAll();
+    }
+
+    private void Editar(int id)
+    {
+        _nav.NavigateTo($"/estilosvida/editar/{id}");
+    }
+
+    private async Task Eliminar(int id)
+    {
+        await _repositorio.Delete(id);
+        await CargarEstilos();
+    }
+}

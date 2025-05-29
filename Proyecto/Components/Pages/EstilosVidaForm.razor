@@ -1,0 +1,63 @@
+﻿@page "/estilosvida/nuevo"
+@page "/estilosvida/editar/{Id:int}"
+@inject IRepositorioEstilosVida _repositorio
+@inject NavigationManager _nav
+
+<h3>@(_estilo.Id == 0 ? "Nuevo Estilo de Vida" : "Editar Estilo de Vida")</h3>
+
+<EditForm Model="_estilo" OnValidSubmit="Guardar" FormName="FormEstiloVida">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="mb-3">
+        <label class="form-label">Nombre</label>
+        <InputText class="form-control" @bind-Value="_estilo.Nombre" />
+        <ValidationMessage For="@(() => _estilo.Nombre)" />
+    </div>
+
+    <button class="btn btn-primary" type="submit">Guardar</button>
+    <a class="btn btn-secondary" href="/estilosvida">Cancelar</a>
+</EditForm>
+
+@code {
+    [Parameter]
+    public int? Id { get; set; }
+
+    private EstiloVida _estilo = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Id.HasValue && Id.Value != 0)
+        {
+            var estiloExistente = await _repositorio.GetById(Id.Value);
+            if (estiloExistente != null)
+            {
+                _estilo = estiloExistente;
+            }
+            else
+            {
+                _nav.NavigateTo("/estilosvida");
+            }
+        }
+    }
+
+    private async Task Guardar()
+    {
+        if (string.IsNullOrWhiteSpace(_estilo.Nombre))
+        {
+            // Si el campo Nombre está vacío, no continuar
+            return;
+        }
+
+        if (_estilo.Id == 0)
+        {
+            await _repositorio.Add(_estilo);
+        }
+        else
+        {
+            await _repositorio.Update(_estilo);
+        }
+
+        _nav.NavigateTo("/estilosvida");
+    }
+}

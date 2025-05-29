@@ -3,6 +3,9 @@
 @rendermode InteractiveServer
 @inject NavigationManager _navigationManager
 @inject IRepositorioUsuarios _repositorioUsuarios
+@inject IRepositorioClases _repositorioClases
+@inject IRepositorioEstilosVida _repositorioEstilosVida
+
 <PageTitle>Usuarios</PageTitle>
 
 <h3>@_mensaje Usuario</h3>
@@ -66,6 +69,32 @@
         </div>
     </div>
 
+    <div class="mb-3 row">
+        <label for="claseId" class="col-sm-2 col-form-label">Clase</label>
+        <div class="col-sm-10">
+            <InputSelect id="claseId" class="form-select" @bind-Value="_usuario.ClaseId">
+                <option value="">-- Ninguna clase --</option>
+                @foreach (var clase in _clases)
+                {
+                    <option value="@clase.Id">@clase.Nombre</option>
+                }
+            </InputSelect>
+        </div>
+    </div>
+
+    <div class="mb-3 row">
+        <label class="col-sm-2 col-form-label">Estilos de Vida</label>
+        <div class="col-sm-10">
+            @foreach (var estilo in _estilosVida)
+            {
+                <div class="form-check">
+                    <InputCheckbox class="form-check-input" @bind-Value="estilo.Seleccionado" />
+                    <label class="form-check-label">@estilo.Nombre</label>
+                </div>
+            }
+        </div>
+    </div>
+
     <div class="row">
         <div class="col-sm-10 offset-sm-2">
             <button type="submit" class="btn btn-primary">Guardar</button>
@@ -80,18 +109,44 @@
 
     private Usuario _usuario = new();
     private string _mensaje = "Nuevo ";
+    private List<Clase> _clases = new();
+    private List<EstiloVidaSeleccionado> _estilosVida = new();
 
     protected override async Task OnInitializedAsync()
     {
+        _clases = await _repositorioClases.GetAll();
+        var todosEstilos = await _repositorioEstilosVida.GetAll();
+
         if (Id > 0)
         {
             _usuario = await _repositorioUsuarios.Get(Id);
             _mensaje = "Modificar ";
+            var estilosUsuario = _usuario.EstilosVida.Select(e => e.Id).ToList();
+            _estilosVida = todosEstilos.Select(e => new EstiloVidaSeleccionado
+                {
+                    Id = e.Id,
+                    Nombre = e.Nombre,
+                    Seleccionado = estilosUsuario.Contains(e.Id)
+                }).ToList();
+        }
+        else
+        {
+            _estilosVida = todosEstilos.Select(e => new EstiloVidaSeleccionado
+                {
+                    Id = e.Id,
+                    Nombre = e.Nombre,
+                    Seleccionado = false
+                }).ToList();
         }
     }
 
     private async Task Guardar()
     {
+        _usuario.EstilosVida = _estilosVida
+            .Where(e => e.Seleccionado)
+            .Select(e => new EstiloVida { Id = e.Id, Nombre = e.Nombre })
+            .ToList();
+
         if (Id > 0)
         {
             await _repositorioUsuarios.Update(_usuario);
@@ -101,5 +156,12 @@
             await _repositorioUsuarios.Add(_usuario);
         }
         _navigationManager.NavigateTo("/usuarios");
+    }
+
+    public class EstiloVidaSeleccionado
+    {
+        public int Id { get; set; }
+        public string Nombre { get; set; } = string.Empty;
+        public bool Seleccionado { get; set; }
     }
 }
