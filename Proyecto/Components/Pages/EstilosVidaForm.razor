@@ -1,18 +1,18 @@
 ﻿@page "/estilosvida/nuevo"
 @page "/estilosvida/editar/{Id:int}"
+@rendermode InteractiveServer
 @inject IRepositorioEstilosVida _repositorio
 @inject NavigationManager _nav
 
-<h3>@(_estilo.Id == 0 ? "Nuevo Estilo de Vida" : "Editar Estilo de Vida")</h3>
+<h3>@(Estilo.Id == 0 ? "Nuevo Estilo de Vida" : "Editar Estilo de Vida")</h3>
 
-<EditForm Model="_estilo" OnValidSubmit="Guardar" FormName="FormEstiloVida">
+<EditForm Model="Estilo" OnValidSubmit="Guardar" FormName="FormEstiloVida">
     <DataAnnotationsValidator />
-    <ValidationSummary />
 
     <div class="mb-3">
         <label class="form-label">Nombre</label>
-        <InputText class="form-control" @bind-Value="_estilo.Nombre" />
-        <ValidationMessage For="@(() => _estilo.Nombre)" />
+        <InputText class="form-control" @bind-Value="Estilo.Nombre" />
+        <ValidationMessage For="@(() => Estilo.Nombre)" />
     </div>
 
     <button class="btn btn-primary" type="submit">Guardar</button>
@@ -23,7 +23,7 @@
     [Parameter]
     public int? Id { get; set; }
 
-    private EstiloVida _estilo = new();
+    private EstiloVida Estilo { get; set; } = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -32,7 +32,7 @@
             var estiloExistente = await _repositorio.GetById(Id.Value);
             if (estiloExistente != null)
             {
-                _estilo = estiloExistente;
+                Estilo = estiloExistente;
             }
             else
             {
@@ -43,15 +43,15 @@
 
     private async Task Guardar()
     {
-        if (!string.IsNullOrWhiteSpace(_estilo.Nombre))
+        if (!string.IsNullOrWhiteSpace(Estilo.Nombre))
         {
-            if (_estilo.Id == 0)
+            if (Estilo.Id == 0)
             {
-                await _repositorio.Add(_estilo);
+                await _repositorio.Add(Estilo);
             }
             else
             {
-                await _repositorio.Update(_estilo);
+                await _repositorio.Update(Estilo);
             }
 
             _nav.NavigateTo("/estilosvida");

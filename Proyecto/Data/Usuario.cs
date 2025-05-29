@@ -30,6 +30,7 @@ public class Usuario
     public int? ClaseId { get; set; }
     virtual public Clase? Clase { get; set; }
     public List<EstiloVida> EstilosVida { get; set; } = new();
+    
 
 
 

@@ -5,20 +5,14 @@
 @inject IRepositorioClases _repositorioClases
 
 <PageTitle>Clases</PageTitle>
-<h3>Nombre de la clase a tomar</h3>
+<h3>@_titulo clase</h3>
 
 <EditForm Model="_clase" FormName="frmClase" OnValidSubmit="Guardar">
     <DataAnnotationsValidator />
     <div class="mb-3 row">
-        <label for="selectNombre" class="col-sm-2 col-form-label">Nombre</label>
+        <label for="inputNombre" class="col-sm-2 col-form-label">Nombre</label>
         <div class="col-sm-10">
-            <InputSelect id="selectNombre" class="form-control" @bind-Value="_clase.Nombre">
-                <option value="" disabled selected hidden>-- Selecciona una clase --</option>
-                @foreach (var clase in _opcionesClases)
-                {
-                    <option value="@clase">@clase</option>
-                }
-            </InputSelect>
+            <InputText id="inputNombre" class="form-control" @bind-Value="_clase.Nombre" />
             <ValidationMessage For="@(() => _clase.Nombre)" />
         </div>
     </div>
@@ -35,15 +29,14 @@
     public int Id { get; set; }
 
     private Clase _clase = new();
-    private string _titulo = "Nueva ";
-    private List<string> _opcionesClases = new() { "Yoga", "Spinning", "Funcional", "Pilates" };
+    private string _titulo = "Nueva";
 
-    override protected async Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
         if (Id > 0)
         {
             _clase = await _repositorioClases.Get(Id);
-            _titulo = "Modificar ";
+            _titulo = "Modificar";
         }
     }
 
