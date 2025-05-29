@@ -1,5 +1,7 @@
-﻿using Proyecto.Data;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using Proyecto.Data;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 public class RepositorioEstilosVida : IRepositorioEstilosVida
 {

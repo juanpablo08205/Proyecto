@@ -6,7 +6,7 @@
 
 <h3>@(Estilo.Id == 0 ? "Nuevo Estilo de Vida" : "Editar Estilo de Vida")</h3>
 
-<EditForm Model="Estilo" OnValidSubmit="Guardar" FormName="FormEstiloVida">
+<EditForm Model="Estilo" OnValidSubmit="Guardar">
     <DataAnnotationsValidator />
 
     <div class="mb-3">
@@ -25,7 +25,7 @@
 
     private EstiloVida Estilo { get; set; } = new();
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnParametersSetAsync()
     {
         if (Id.HasValue && Id.Value != 0)
         {
@@ -38,6 +38,10 @@
             {
                 _nav.NavigateTo("/estilosvida");
             }
+        }
+        else
+        {
+            Estilo = new();
         }
     }
 
