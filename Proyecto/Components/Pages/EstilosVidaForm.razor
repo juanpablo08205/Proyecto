@@ -43,21 +43,18 @@
 
     private async Task Guardar()
     {
-        if (string.IsNullOrWhiteSpace(_estilo.Nombre))
+        if (!string.IsNullOrWhiteSpace(_estilo.Nombre))
         {
-            // Si el campo Nombre está vacío, no continuar
-            return;
-        }
+            if (_estilo.Id == 0)
+            {
+                await _repositorio.Add(_estilo);
+            }
+            else
+            {
+                await _repositorio.Update(_estilo);
+            }
 
-        if (_estilo.Id == 0)
-        {
-            await _repositorio.Add(_estilo);
+            _nav.NavigateTo("/estilosvida");
         }
-        else
-        {
-            await _repositorio.Update(_estilo);
-        }
-
-        _nav.NavigateTo("/estilosvida");
     }
 }

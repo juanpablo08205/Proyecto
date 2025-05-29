@@ -1,13 +1,11 @@
-﻿using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace Proyecto.Data
 {
     public class BDDirectorioDBContext : DbContext
     {
-        public BDDirectorioDBContext(
-                   DbContextOptions<BDDirectorioDBContext> options
-                                    ) : base(options)
+        public BDDirectorioDBContext(DbContextOptions<BDDirectorioDBContext> options)
+            : base(options)
         {
         }
 
@@ -19,6 +17,7 @@ namespace Proyecto.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            // Relación muchos a muchos entre Usuario y EstiloVida
             modelBuilder.Entity<Usuario>()
                 .HasMany(u => u.EstilosVida)
                 .WithMany(e => e.Usuarios);
