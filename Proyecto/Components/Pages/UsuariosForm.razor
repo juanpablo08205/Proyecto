@@ -142,10 +142,21 @@
 
     private async Task Guardar()
     {
-        _usuario.EstilosVida = _estilosVida
+
+        var soloSeleccionados = _estilosVida
             .Where(e => e.Seleccionado)
-            .Select(e => new EstiloVida { Id = e.Id, Nombre = e.Nombre })
+            .Select(e => new EstiloVida { Id = e.Id}) // solo ID
             .ToList();
+
+        _usuario.EstilosVida = new();
+        foreach(EstiloVida estilo in soloSeleccionados)
+        {
+            var _estilo = await _repositorioEstilosVida.GetById(estilo.Id);
+            if (_estilo!=null)
+            {
+                _usuario.EstilosVida.Add(_estilo);
+            }
+        }
 
         if (Id > 0)
         {
@@ -155,6 +166,7 @@
         {
             await _repositorioUsuarios.Add(_usuario);
         }
+
         _navigationManager.NavigateTo("/usuarios");
     }
 
