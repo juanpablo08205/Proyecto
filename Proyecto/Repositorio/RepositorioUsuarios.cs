@@ -10,14 +10,16 @@ using Microsoft.EntityFrameworkCore;
             _context = context;
         }
 
-        public async Task<List<Usuario>> GetAll()
-        {
-            return await _context.Usuarios
-                                 .AsNoTracking()
-                                 .ToListAsync();
-        }
+    public async Task<List<Usuario>> GetAll()
+    {
+        return await _context.Usuarios
+            .Include(u => u.Clase) // si también necesitas mostrar la clase
+            .Include(u => u.EstilosVida)
+            .ToListAsync();
+    }
 
-        public async Task<Usuario> Get(int id)
+
+    public async Task<Usuario> Get(int id)
         {
             return await _context.Usuarios.FindAsync(id);
         }

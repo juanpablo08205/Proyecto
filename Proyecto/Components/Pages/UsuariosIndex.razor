@@ -23,6 +23,7 @@ else if (_usuarios.Count > 0)
                 <th>Fecha Registro</th>
                 <th>Membresía</th>
                 <th>Estado</th>
+                <th>Estilos de Vida</th> <!-- NUEVA COLUMNA -->
                 <th>Acciones</th>
             </tr>
         </thead>
@@ -36,6 +37,21 @@ else if (_usuarios.Count > 0)
                     <td>@usuario.FechaRegistro.ToShortDateString()</td>
                     <td>@usuario.TipoMembresia</td>
                     <td>@usuario.Estado</td>
+                    <td>
+                        @if (usuario.EstilosVida != null && usuario.EstilosVida.Any())
+                        {
+                            <ul class="mb-0 ps-3">
+                                @foreach (var estilo in usuario.EstilosVida)
+                                {
+                                    <li>@estilo.Nombre</li>
+                                }
+                            </ul>
+                        }
+                        else
+                        {
+                            <span class="text-muted">Ninguno</span>
+                        }
+                    </td>
                     <td>
                         <button class="btn btn-outline-primary" @onclick="@(() => Editar(usuario))">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
