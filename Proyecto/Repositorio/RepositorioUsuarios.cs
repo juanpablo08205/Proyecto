@@ -19,6 +19,7 @@ using Microsoft.EntityFrameworkCore;
     }
 
 
+
     public async Task<Usuario> Get(int id)
         {
             return await _context.Usuarios.FindAsync(id);
