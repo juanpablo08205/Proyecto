@@ -36,11 +36,22 @@ public class RepositorioEstilosVida : IRepositorioEstilosVida
 
     public async Task Delete(int id)
     {
-        var estilo = await GetById(id);
-        if (estilo != null)
+        var estiloVida = await _context.EstilosVida
+            .Include(e => e.Usuarios)
+            .FirstOrDefaultAsync(e => e.Id == id);
+
+        if (estiloVida == null)
         {
-            _context.EstilosVida.Remove(estilo);
-            await _context.SaveChangesAsync();
+            throw new Exception("Estilo de vida no encontrado.");
         }
+
+        if (estiloVida.Usuarios != null && estiloVida.Usuarios.Any())
+        {
+            throw new Exception("Hay usuarios que cuentan con este estilo de vida.");
+        }
+
+        _context.EstilosVida.Remove(estiloVida);
+        await _context.SaveChangesAsync();
     }
+
 }

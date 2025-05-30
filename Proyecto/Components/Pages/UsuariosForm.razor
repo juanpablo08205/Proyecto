@@ -145,7 +145,7 @@
 
         var soloSeleccionados = _estilosVida
             .Where(e => e.Seleccionado)
-            .Select(e => new EstiloVida { Id = e.Id}) // solo ID
+            .Select(e => new EstiloVida { Id = e.Id}) 
             .ToList();
 
         _usuario.EstilosVida = new();

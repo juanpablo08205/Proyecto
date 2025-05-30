@@ -22,9 +22,23 @@ namespace Proyecto.Repositorio
         public async Task Delete(int id)
         {
             var clase = await _context.Clases.FindAsync(id);
-            _context.Clases.Remove(clase!);
+
+            if (clase == null)
+            {
+                throw new Exception("Clase no encontrada.");
+            }
+
+            var tieneUsuarios = await _context.Usuarios.AnyAsync(u => u.ClaseId == id);
+
+            if (tieneUsuarios)
+            {
+                throw new Exception("Ya hay usuarios en esta clase.");
+            }
+
+            _context.Clases.Remove(clase);
             await _context.SaveChangesAsync();
         }
+
 
         public async Task<Clase> Get(int id)
         {

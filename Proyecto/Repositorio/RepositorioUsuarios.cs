@@ -13,7 +13,7 @@ using Microsoft.EntityFrameworkCore;
     public async Task<List<Usuario>> GetAll()
     {
         return await _context.Usuarios
-            .Include(u => u.Clase) // si también necesitas mostrar la clase
+            .Include(u => u.Clase) 
             .Include(u => u.EstilosVida)
             .ToListAsync();
     }

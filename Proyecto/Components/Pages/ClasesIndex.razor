@@ -6,6 +6,11 @@
 <h3>Clases</h3>
 <a class="btn btn-success" href="clases/nueva">Nueva clase</a>
 
+@if (!string.IsNullOrEmpty(_error))
+{
+    <div class="alert alert-danger">@_error</div>
+}
+
 @if (_clases == null)
 {
     <div class="spinner-border" role="status">
@@ -46,6 +51,7 @@ else if (_clases.Count() > 0)
 
 @code {
     private List<Clase>? _clases;
+    private string? _error;
 
     override protected async Task OnInitializedAsync()
     {
@@ -59,7 +65,15 @@ else if (_clases.Count() > 0)
 
     private async Task Eliminar(Clase clase)
     {
-        await _repositorioClases.Delete(clase.Id);
-        _clases = await _repositorioClases.GetAll();
+        _error = null;
+        try
+        {
+            await _repositorioClases.Delete(clase.Id);
+            _clases = await _repositorioClases.GetAll();
+        }
+        catch (Exception ex)
+        {
+            _error = ex.Message;
+        }
     }
 }
