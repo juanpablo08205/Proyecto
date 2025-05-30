@@ -49,7 +49,7 @@
         <label for="tipoMembresia" class="col-sm-2 col-form-label">Tipo de Membresía</label>
         <div class="col-sm-10">
             <InputSelect @bind-Value="_usuario.TipoMembresia" class="form-select">
-                <option value="">-- Selecciona --</option>
+                <option value="">Selecciona </option>
                 <option value="Mensual">Mensual</option>
                 <option value="Anual">Anual</option>
             </InputSelect>
@@ -61,7 +61,7 @@
         <label for="estado" class="col-sm-2 col-form-label">Estado</label>
         <div class="col-sm-10">
             <InputSelect @bind-Value="_usuario.Estado" class="form-select">
-                <option value="">-- Selecciona --</option>
+                <option value=""> Selecciona </option>
                 <option value="Activa">Activa</option>
                 <option value="Vencida">Vencida</option>
             </InputSelect>
@@ -73,7 +73,7 @@
         <label for="claseId" class="col-sm-2 col-form-label">Clase</label>
         <div class="col-sm-10">
             <InputSelect id="claseId" class="form-select" @bind-Value="_usuario.ClaseId">
-                <option value="">-- Ninguna clase --</option>
+                <option value="">Ninguna clase</option>
                 @foreach (var clase in _clases)
                 {
                     <option value="@clase.Id">@clase.Nombre</option>
